@@ -1,5 +1,12 @@
 from regex import regex
 
+import files
+
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
 
 class MultiWordRegexBuilder:
     """Build a regex across multiple words
@@ -158,18 +165,18 @@ class DateMatcher(RegexMatcher):
     """Logic to find dates in Spanish texts
     """
 
-    MONTHS_FILE_LOC = "Files/Spanish_months"
-    NRS_FILE_LOC = "Files/Spanish_numbers"
+    MONTHS_FILE_NAME = "spanish_months.txt"
+    NRS_FILE_NAME = "spanish_numbers.txt"
 
     def __init__(self):
-        nrs_file = open(self.NRS_FILE_LOC)
+        nrs_file = pkg_resources.open_text(files, self.NRS_FILE_NAME)
         written_numbers = []
         for line in nrs_file:
             written_numbers.append(line.strip())
         self.written_numbers = written_numbers
         nrs_file.close()
 
-        months_file = open(self.MONTHS_FILE_LOC)
+        months_file = pkg_resources.open_text(files, self.MONTHS_FILE_NAME)
         months = []
         for line in months_file:
             months.append(line.strip())

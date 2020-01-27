@@ -16,7 +16,7 @@ setup(
     long_description=readme,
     author='Pangeanic - Hans Degroote',
     author_email='h.degroote@pangeanic.com',
-    url='',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
+    packages=["regexutils"],
+    package_data={'regexutils': ["files/*.txt"]},
 )

@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 from regex import regex
 from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher
-
+import files
 
 class TestRegexBuilder(unittest.TestCase):
     """Most of RegexBuilder is tested by testing some of its implementing classes.
@@ -38,12 +38,10 @@ class TestDateMatcher(unittest.TestCase):
 
     def test_init(self):
         matcher = DateMatcher()
-        assert (Path(matcher.MONTHS_FILE_LOC).is_file())
-        assert (Path(matcher.NRS_FILE_LOC).is_file())
         months = [month.casefold() for month in matcher.months]
         numbers = [number.casefold() for number in matcher.written_numbers]
         assert ("diciembre".casefold() in months)
-        assert ("veintiséis".casefold() in matcher.written_numbers)
+        assert ("veintiséis".casefold() in numbers)
 
 
 

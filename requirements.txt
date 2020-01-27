@@ -1,1 +1,2 @@
 regex
+importlib_resources
