@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 with open('README.rst') as f:
@@ -18,5 +18,5 @@ setup(
     author_email='h.degroote@pangeanic.com',
     license=license,
     packages=['',"files"],
-    package_data={'regexutils': ['files/*.txt']},
+    package_data={'regexutils': ['files/*.txt', 'files/*.csv']},
 )

@@ -1,5 +1,5 @@
 from regex import regex
-
+import csv
 import files
 
 try:
@@ -203,4 +203,61 @@ class DateMatcher(RegexMatcher):
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
+
+class SpanishLastNameMatcher(RegexMatcher):
+    """Warning: returns many false positives (such as Con, Name, Is)"""
+    lastnames = set()
+
+    LASTNAMES_FILE_LOC_1 = 'apellidos_frecuencia_frequency_20_to_100.csv'
+    LASTNAMES_FILE_LOC_2 = 'apellidos_frecuencia_frequency_over_100.csv'
+    def __init__(self):
+        lastnames = set()
+        names_file_1 = pkg_resources.open_text(files, self.LASTNAMES_FILE_LOC_1)
+        for line in names_file_1:
+            stripped_line = line.split(",")
+            if stripped_line[0].isnumeric():
+                lastnames.add(stripped_line[1])
+        names_file_2 = pkg_resources.open_text(files, self.LASTNAMES_FILE_LOC_2)
+        names_file_1.close()
+        for line in names_file_2:
+            stripped_line = line.split(",")
+            if stripped_line[0].isnumeric():
+                lastnames.add(stripped_line[1])
+        names_file_2.close()
+
+        last_names_sin_spaces = {name for name in lastnames if len(name.split(" ")) == 1}
+        rb = RegexBuilder()
+        rb.add_list_options_as_regex(last_names_sin_spaces)
+        tot_regex = rb.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)
+
+
+class SpanishFirstNameMatcher(RegexMatcher):
+    lastnames = set()
+
+    FIRSTNAMES_FILE_LOC_1 = 'nombres_masculinos.csv'
+    FIRSTNAMES_FILE_LOC_2 = 'nombres_femininos.csv'
+    def __init__(self):
+        firstnames = set()
+        names_file_1 = pkg_resources.open_text(files, self.FIRSTNAMES_FILE_LOC_1)
+        for line in names_file_1:
+            stripped_line = line.split(",")
+            if stripped_line[0].isnumeric():
+                firstnames.add(stripped_line[1])
+        names_file_2 = pkg_resources.open_text(files, self.FIRSTNAMES_FILE_LOC_2)
+        names_file_1.close()
+        for line in names_file_2:
+            stripped_line = line.split(",")
+            if stripped_line[0].isnumeric():
+                firstnames.add(stripped_line[1])
+        names_file_2.close()
+
+        firstnames_sin_spaces = {name for name in firstnames if len(name.split(" ")) == 1}
+
+        rb = RegexBuilder()
+        rb.add_list_options_as_regex(firstnames_sin_spaces)
+        tot_regex = rb.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)
 

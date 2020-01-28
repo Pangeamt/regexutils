@@ -1,7 +1,8 @@
 import unittest
 from pathlib import Path
 from regex import regex
-from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher
+from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
+    SpanishLastNameMatcher, SpanishFirstNameMatcher
 import files
 
 class TestRegexBuilder(unittest.TestCase):
@@ -14,11 +15,13 @@ class TestRegexBuilder(unittest.TestCase):
         rb = RegexBuilder()
         assert rb.build() == ""
         rb.add_option("and")
+        rb.add_option("BLABLABALBABLABLABA")
+
         and_regex_text = rb.build()
         and_regex = regex.compile(and_regex_text)
         matcher = RegexMatcher(and_regex)
         examples = [
-            "and", "and ", " and"
+            "and", "and ", " and", "this and that"
         ]
         negative_examples = ["andy", " andy ", " rand "]
 
@@ -113,47 +116,99 @@ class TestCIFMatcher(unittest.TestCase):
 
 
 class TestDNIMatcher(unittest.TestCase):
-    examples = [
-        "Este es un DNI 50.083.695-E ",
-        "Un numero que vale 50083695E es este",
-        "Y uno más complicado, con punctuacion al final: 50.083.695-E!",
-        "50.083.695-E Y qué pasa si empieza el frase? ",
-        "O lo termina? 50.083.695-E",
-        "Case da igual 50.083.695-e ",
+    def test(self):
+        examples = [
+            "Este es un DNI 50.083.695-E ",
+            "Un numero que vale 50083695E es este",
+            "Y uno más complicado, con punctuacion al final: 50.083.695-E!",
+            "50.083.695-E Y qué pasa si empieza el frase? ",
+            "O lo termina? 50.083.695-E",
+            "Case da igual 50.083.695-e ",
 
-    ]
-    neg_examples = [
-        "y otro que no X78951234315",
-        "Y tampoco: 123456789",
-        "Ni BB97017461",
-        "CIFs no: A-14.010.342"
-        "Splitting at other parts of the DNI makes it invalid: 500.83.695-E "
-    ]
-    matcher = DNIMatcher()
+        ]
+        neg_examples = [
+            "y otro que no X78951234315",
+            "Y tampoco: 123456789",
+            "Ni BB97017461",
+            "CIFs no: A-14.010.342"
+            "Splitting at other parts of the DNI makes it invalid: 500.83.695-E "
+        ]
+        matcher = DNIMatcher()
 
-    for example in examples:
-        assert len(matcher.match(example)) == 1
+        for example in examples:
+            assert len(matcher.match(example)) == 1
 
-    for example in neg_examples:
-        assert len(matcher.match(example)) == 0
+        for example in neg_examples:
+            assert len(matcher.match(example)) == 0
 
 class TestEmailMatcher(unittest.TestCase):
-    examples = [
-        "Este es un correo: h.degroote@pangeanic.com ",
-        "También: h_degroote@pangeanic.sales.info.es",
-        "con punctuación: h.degroote@pangeanic.com."
+    def test(self):
 
-    ]
-    neg_examples = [
-        "no soy correo: find out more @info ",
-    ]
-    matcher = EmailMatcher()
+        examples = [
+            "Este es un correo: h.degroote@pangeanic.com ",
+            "También: h_degroote@pangeanic.sales.info.es",
+            "con punctuación: h.degroote@pangeanic.com."
 
-    for example in examples:
-        assert len(matcher.match(example)) == 1
+        ]
+        neg_examples = [
+            "no soy correo: find out more @info ",
+        ]
+        matcher = EmailMatcher()
 
-    for example in neg_examples:
-        assert len(matcher.match(example)) == 0
+        for example in examples:
+            assert len(matcher.match(example)) == 1
+
+        for example in neg_examples:
+            assert len(matcher.match(example)) == 0
+
+class TestSpanishLastNameMatcher(unittest.TestCase):
+    def test(self):
+        examples = [
+            "Este es un nombre: Aguilar ",
+            " ñ works: Peña",
+            " Name ",
+            " Is ",
+            " Con ",
+        ]
+        neg_examples = [
+            " Degroote ",
+        ]
+
+        matcher = SpanishLastNameMatcher()
+
+        for example in examples:
+            assert len(matcher.match(example)) == 1
+
+        for example in neg_examples:
+            assert len(matcher.match(example)) == 0
+
+        #Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
+        assert not "DOS SANTOS" in matcher.matcher_regex.pattern
+
+
+class TestSpanishFirstNameMatcher(unittest.TestCase):
+    def test(self):
+        examples = [
+            "Este es un nombre: Jose ",
+            " ñ works: Begoña",
+        ]
+        neg_examples = [
+            " Gnoeboehoe ",
+        ]
+
+        matcher = SpanishFirstNameMatcher()
+
+        for example in examples:
+            assert len(matcher.match(example)) == 1
+
+        for example in neg_examples:
+            assert len(matcher.match(example)) == 0
+
+        #Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
+        assert not "MARIE CARMEN" in matcher.matcher_regex.pattern
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

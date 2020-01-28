@@ -1,0 +1,13 @@
+1) Matching names which consist of multiple words (applies to both first names and last names)
+    Explanation by example: in the list of Spanish last names there are the names:
+        -Dos
+        -Santos
+        -Dos Santos
+    Behaviour on input "Dos Santos" if not explicitly considered:
+            Regex ors (|) match greedily: first match wins. So if first match is "Dos", there will be two matches:
+                Dos and Santos. However, if first match is "Dos Santos" there will be only one match ("Dos Santos")
+            Further complication of current code: the order of names in the regex is non-deterministic, as they
+            are read from a set. (so the output of the regex is non-deterministic)
+    Current lazy solution:
+        Only consider names consisting of one word (this guarantees that there is no overlap between ors)
+
