@@ -17,6 +17,6 @@ setup(
     author='Pangeanic - Hans Degroote',
     author_email='h.degroote@pangeanic.com',
     license=license,
-    packages=['',"files"],
+    packages=[''],
     package_data={'regexutils': ['files/*.txt', 'files/*.csv']},
 )
