@@ -17,6 +17,10 @@ setup(
     author='Pangeanic - Hans Degroote',
     author_email='h.degroote@pangeanic.com',
     license=license,
-    packages=[''],
-    package_data={'regexutils': ['files/*.txt', 'files/*.csv']},
+    packages=['', 'files'],
+    install_requires=[
+        "regex",
+        "importlib_resources",
+    ],
+    package_data={'': ['files/*.txt', 'files/*.csv']},
 )
