@@ -2,6 +2,7 @@ from regex import regex
 import csv
 import files
 
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -17,6 +18,8 @@ class MultiWordRegexBuilder:
     A word can be made optional. It a word is optional, the regex matches it both if the word is present or not
     """
     def __init__(self, separators=r"([\p{P} \n\t])", max_separators=3):
+        """Take care to define the possible separators a valid regex between square brackets
+            (making them separate options), as in the standard value"""
         self._regex_words = []
         self._optionals = []
         self.separators = separators
@@ -26,7 +29,7 @@ class MultiWordRegexBuilder:
         self._regex_words.append(regex_word)
         self._optionals.append(optional)
 
-    def create_total_regex(self):
+    def build(self):
         if len(self._regex_words) == 0:
             return ""
         regex_start = "(?<=^|" + self.separators + ")(" #look behind
@@ -46,7 +49,7 @@ class MultiWordRegexBuilder:
         return res
 
     def __str__(self):
-        return self.create_total_regex()
+        return self.build()
 
 
 class RegexBuilder:
@@ -198,26 +201,35 @@ class DateMatcher(RegexMatcher):
         b.add_regex_word(wb3.build_as_part())
         b.add_regex_word(de_regex, optional=True)
         b.add_regex_word(year_regex)
-        tot_regex = b.create_total_regex()
+        tot_regex = b.build()
 
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
 
 class SpanishLastNameMatcher(RegexMatcher):
-    """Warning: returns many false positives (such as Con, Name, Is)"""
-    lastnames = set()
+    """Warning: returns many false positives (such as con, name, is)"""
 
     LASTNAMES_FILE_LOC_1 = 'apellidos_frecuencia_frequency_20_to_100.csv'
     LASTNAMES_FILE_LOC_2 = 'apellidos_frecuencia_frequency_over_100.csv'
+
     def __init__(self):
+        last_names = self.get_last_names()
+        rb = RegexBuilder()
+        rb.add_list_options_as_regex(last_names)
+        tot_regex = rb.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)
+
+    @classmethod
+    def get_last_names(cls):
         lastnames = set()
-        names_file_1 = pkg_resources.open_text(files, self.LASTNAMES_FILE_LOC_1)
+        names_file_1 = pkg_resources.open_text(files, cls.LASTNAMES_FILE_LOC_1)
         for line in names_file_1:
             stripped_line = line.split(",")
             if stripped_line[0].isnumeric():
                 lastnames.add(stripped_line[1])
-        names_file_2 = pkg_resources.open_text(files, self.LASTNAMES_FILE_LOC_2)
+        names_file_2 = pkg_resources.open_text(files, cls.LASTNAMES_FILE_LOC_2)
         names_file_1.close()
         for line in names_file_2:
             stripped_line = line.split(",")
@@ -226,26 +238,30 @@ class SpanishLastNameMatcher(RegexMatcher):
         names_file_2.close()
 
         last_names_sin_spaces = {name for name in lastnames if len(name.split(" ")) == 1}
+        return last_names_sin_spaces
+
+
+class SpanishFirstNameMatcher(RegexMatcher):
+    FIRSTNAMES_FILE_LOC_1 = 'nombres_masculinos.csv'
+    FIRSTNAMES_FILE_LOC_2 = 'nombres_femininos.csv'
+
+    def __init__(self):
+        firstnames = self.get_first_names()
         rb = RegexBuilder()
-        rb.add_list_options_as_regex(last_names_sin_spaces)
+        rb.add_list_options_as_regex(firstnames)
         tot_regex = rb.build()
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
-
-class SpanishFirstNameMatcher(RegexMatcher):
-    lastnames = set()
-
-    FIRSTNAMES_FILE_LOC_1 = 'nombres_masculinos.csv'
-    FIRSTNAMES_FILE_LOC_2 = 'nombres_femininos.csv'
-    def __init__(self):
+    @classmethod
+    def get_first_names(cls):
         firstnames = set()
-        names_file_1 = pkg_resources.open_text(files, self.FIRSTNAMES_FILE_LOC_1)
+        names_file_1 = pkg_resources.open_text(files, cls.FIRSTNAMES_FILE_LOC_1)
         for line in names_file_1:
             stripped_line = line.split(",")
             if stripped_line[0].isnumeric():
                 firstnames.add(stripped_line[1])
-        names_file_2 = pkg_resources.open_text(files, self.FIRSTNAMES_FILE_LOC_2)
+        names_file_2 = pkg_resources.open_text(files, cls.FIRSTNAMES_FILE_LOC_2)
         names_file_1.close()
         for line in names_file_2:
             stripped_line = line.split(",")
@@ -254,10 +270,30 @@ class SpanishFirstNameMatcher(RegexMatcher):
         names_file_2.close()
 
         firstnames_sin_spaces = {name for name in firstnames if len(name.split(" ")) == 1}
+        return firstnames_sin_spaces
 
-        rb = RegexBuilder()
-        rb.add_list_options_as_regex(firstnames_sin_spaces)
-        tot_regex = rb.build()
+
+class SpanishFullNameMatcher(RegexMatcher):
+
+    def __init__(self):
+        first_names = SpanishFirstNameMatcher.get_first_names()
+        last_names = SpanishLastNameMatcher.get_last_names()
+
+        rb_first_names = RegexBuilder()
+        rb_first_names.add_list_options_as_regex(first_names)
+        first_names_regex = rb_first_names.build_as_part()
+
+        rb_last_names = RegexBuilder()
+        rb_last_names.add_list_options_as_regex(last_names)
+        last_names_regex = rb_last_names.build_as_part()
+
+        tot_rb = MultiWordRegexBuilder(separators=r"([ \n\t])")
+        tot_rb.add_regex_word(first_names_regex)
+        tot_rb.add_regex_word(first_names_regex, optional=True)
+        tot_rb.add_regex_word(last_names_regex)
+        tot_rb.add_regex_word(last_names_regex, optional=True)
+
+        tot_regex = tot_rb.build()
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 

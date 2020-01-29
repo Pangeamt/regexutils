@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 from regex import regex
 from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
-    SpanishLastNameMatcher, SpanishFirstNameMatcher
+    SpanishLastNameMatcher, SpanishFirstNameMatcher, SpanishFullNameMatcher
 import files
 
 class TestRegexBuilder(unittest.TestCase):
@@ -207,6 +207,30 @@ class TestSpanishFirstNameMatcher(unittest.TestCase):
         #Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
         assert not "MARIE CARMEN" in matcher.matcher_regex.pattern
 
+
+class TestSpanishFullNameMatcher(unittest.TestCase):
+    def test(self):
+        examples = [
+            " Jose Aguilar ",
+            " Jose Jose Aguilar ",
+            " Jose Jose Aguilar Aguilar",
+            " Marie Carmen Morena Blanca",
+            " Yolanda Yolanda Yolanda Aguilar Aguilar", #Matches starting from second Yolanda
+            " Marie Carmen Maria Morena Blanca ",  # Matches starting from Carmen
+
+        ]
+        neg_examples = [
+            " boehoebhoe biedoebiedoe badabada boehoehoe ",
+            " Jose De La Mano", #No last names consisting of multiple names
+        ]
+
+        matcher = SpanishFullNameMatcher()
+
+        for example in examples:
+            assert len(matcher.match(example)) == 1
+
+        for example in neg_examples:
+            assert len(matcher.match(example)) == 0
 
 
 
