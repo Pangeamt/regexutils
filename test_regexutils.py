@@ -169,6 +169,8 @@ class TestSpanishLastNameMatcher(unittest.TestCase):
             " Name ",
             " Is ",
             " Con ",
+            " Accents: Pérez "
+
         ]
         neg_examples = [
             " Degroote ",
@@ -191,6 +193,7 @@ class TestSpanishFirstNameMatcher(unittest.TestCase):
         examples = [
             "Este es un nombre: Jose ",
             " ñ works: Begoña",
+            " Accents: Luís "
         ]
         neg_examples = [
             " Gnoeboehoe ",
@@ -217,7 +220,7 @@ class TestSpanishFullNameMatcher(unittest.TestCase):
             " Marie Carmen Morena Blanca",
             " Yolanda Yolanda Yolanda Aguilar Aguilar", #Matches starting from second Yolanda
             " Marie Carmen Maria Morena Blanca ",  # Matches starting from Carmen
-
+            " Manuel Herranz Pérez ", #Accents matched
         ]
         neg_examples = [
             " boehoebhoe biedoebiedoe badabada boehoehoe ",

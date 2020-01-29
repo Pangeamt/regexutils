@@ -218,6 +218,12 @@ class SpanishLastNameMatcher(RegexMatcher):
         rb = RegexBuilder()
         rb.add_list_options_as_regex(last_names)
         tot_regex = rb.build()
+        tot_regex = tot_regex.replace("A", "[AÁ]")
+        tot_regex = tot_regex.replace("E", "[EÉ]")
+        tot_regex = tot_regex.replace("I", "[IÍ]")
+        tot_regex = tot_regex.replace("O", "[OÓ]")
+        tot_regex = tot_regex.replace("U", "[UÚ]")
+
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
@@ -250,6 +256,12 @@ class SpanishFirstNameMatcher(RegexMatcher):
         rb = RegexBuilder()
         rb.add_list_options_as_regex(firstnames)
         tot_regex = rb.build()
+        tot_regex = tot_regex.replace("A", "[AÁ]")
+        tot_regex = tot_regex.replace("E", "[EÉ]")
+        tot_regex = tot_regex.replace("I", "[IÍ]")
+        tot_regex = tot_regex.replace("O", "[OÓ]")
+        tot_regex = tot_regex.replace("U", "[UÚ]")
+
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
@@ -294,6 +306,11 @@ class SpanishFullNameMatcher(RegexMatcher):
         tot_rb.add_regex_word(last_names_regex, optional=True)
 
         tot_regex = tot_rb.build()
+        tot_regex = tot_regex.replace("A", "[AÁ]")
+        tot_regex = tot_regex.replace("E", "[EÉ]")
+        tot_regex = tot_regex.replace("I", "[IÍ]")
+        tot_regex = tot_regex.replace("O", "[OÓ]")
+        tot_regex = tot_regex.replace("U", "[UÚ]")
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
