@@ -221,11 +221,14 @@ class TestSpanishFullNameMatcher(unittest.TestCase):
             " Yolanda Yolanda Yolanda Aguilar Aguilar", #Matches starting from second Yolanda
             " Marie Carmen Maria Morena Blanca ",  # Matches starting from Carmen
             " Manuel Herranz Pérez ", #Accents matched
+            " JOSE AGUILAR ",
         ]
         neg_examples = [
             " boehoebhoe biedoebiedoe badabada boehoehoe ",
             " Jose De La Mano", #No last names consisting of multiple names
-        ]
+            " jose aguilar ", #lower case names not considered
+            " Jose aguilar",
+         ]
 
         matcher = SpanishFullNameMatcher()
 

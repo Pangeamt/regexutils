@@ -314,3 +314,13 @@ class SpanishFullNameMatcher(RegexMatcher):
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
 
+    def match(self, text):
+        unfiltered_res = super().match(text)
+        new_matches = []
+        for match in unfiltered_res:
+            name = match.string[match.start():match.end()-1]
+            parts = str(name).split(" ")
+            if False not in [part[0].isupper() for part in parts]:
+                new_matches.append(match)
+        return new_matches
+
