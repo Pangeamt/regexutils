@@ -11,3 +11,15 @@
     Current lazy solution:
         Only consider names consisting of one word (this guarantees that there is no overlap between ors)
 
+2) Complex problem_ regexes with optional matches at the end (or beginning) result in incorrect matching
+    due to spaces because there is no (straightforward) way to know whether the last optional word has
+    been matched.
+    If it was matched: look-ahead required to check for a space. If not: the last matched word should
+    do the look-ahead. [If spaces are defined before the word instead of after the problem turns around,
+    and the issue is at the beginning of the word]
+    Example: matching Spanish names consisting of 1 or 2 first names and 1 or 2 last names
+    this does not work: first-name optional-first-name second-name optional-second-name
+        => does not match on "Jose Romero" or "Jose Romero ", but does match on "Jose Romero  "
+            (or for example "Jose Romero es un hombre" is not matched on either, but
+            "Jose Romero  es un hombre" is.)
+    this works: first-name optional-first-name optional-second-name second-name

@@ -32,6 +32,12 @@ class MultiWordRegexBuilder:
     def build(self):
         if len(self._regex_words) == 0:
             return ""
+        if self._optionals[0] == True:
+            raise ValueError("The first argument of the regex cannot be optional")
+        if self._optionals[-1] == True:
+            raise ValueError("The last argument of the regex cannot be optional")
+
+
         regex_start = "(?<=^|" + self.separators + ")(" #look behind
         regex_end = ")(?=" + self.separators + "|$)" #Look ahead: any punctuation after the match is not consumed
         separator_str = self.separators + "{1," + str(self.max_separators) + "}"
@@ -213,7 +219,7 @@ class SpanishLastNameMatcher(RegexMatcher):
     LASTNAMES_FILE_LOC_1 = 'apellidos_frecuencia_frequency_20_to_100.csv'
     LASTNAMES_FILE_LOC_2 = 'apellidos_frecuencia_frequency_over_100.csv'
 
-    def __init__(self):
+    def __init__(self, ):
         last_names = self.get_last_names()
         rb = RegexBuilder()
         rb.add_list_options_as_regex(last_names)
@@ -302,8 +308,8 @@ class SpanishFullNameMatcher(RegexMatcher):
         tot_rb = MultiWordRegexBuilder(separators=r"([ \n\t])")
         tot_rb.add_regex_word(first_names_regex)
         tot_rb.add_regex_word(first_names_regex, optional=True)
-        tot_rb.add_regex_word(last_names_regex)
         tot_rb.add_regex_word(last_names_regex, optional=True)
+        tot_rb.add_regex_word(last_names_regex)
 
         tot_regex = tot_rb.build()
         tot_regex = tot_regex.replace("A", "[AÁ]")

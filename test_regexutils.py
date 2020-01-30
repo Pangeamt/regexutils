@@ -1,9 +1,12 @@
 import unittest
 from pathlib import Path
+
+import regexutils
 from regex import regex
 from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
     SpanishLastNameMatcher, SpanishFirstNameMatcher, SpanishFullNameMatcher
 import files
+
 
 class TestRegexBuilder(unittest.TestCase):
     """Most of RegexBuilder is tested by testing some of its implementing classes.
@@ -33,6 +36,28 @@ class TestRegexBuilder(unittest.TestCase):
             assert len(matcher.match(example)) == 0
 
 
+class TestMultiWordRegexBuilder(unittest.TestCase):
+    def test(self):
+        rb = regexutils.MultiWordRegexBuilder()
+        rb.add_regex_word("Hello", optional=True)
+        with self.assertRaises(ValueError):
+            rb.build()
+
+        rb = regexutils.MultiWordRegexBuilder()
+        rb.add_regex_word("Hello", optional=False)
+        rb.add_regex_word("Again", optional=True)
+        with self.assertRaises(ValueError):
+            rb.build()
+        try:
+            rb = regexutils.MultiWordRegexBuilder()
+            rb.add_regex_word("Hello", optional=False)
+            rb.add_regex_word("Once", optional=True)
+            rb.add_regex_word("Again", optional=False)
+            rb.build()
+        except ValueError:
+            self.fail("ValueError thrown in TestMultiWordRegexBuilder which should not happen")
+
+
 class TestDateMatcher(unittest.TestCase):
 
     @classmethod
@@ -46,23 +71,21 @@ class TestDateMatcher(unittest.TestCase):
         assert ("diciembre".casefold() in months)
         assert ("veintiséis".casefold() in numbers)
 
-
-
     def test_find_dates(self):
         examples = [
-                    "Quedamos el lunes 4 de noviembre de 2019 a las 4 en plaza de la virgen",
-                    "Nos vemos el cuatro de enero de 1905 para arreglar las cosas",
-                    "sin des: 4 enero 1905 para arreglar las cosas",
-                    "4 de noviembre de 2019 inicia un frase",
-                    "También puede terminarlo: 4 de noviembre de 2019",
-                    "O llevar punctuación: 4 de noviembre de 2019!",
-                    "O hay más espacios y otros tipos de punctuación: 4  de---noviembre de /2019\!",
-                    "No sensitvo al case 4  DE noViemBre de 2019 "
+            "Quedamos el lunes 4 de noviembre de 2019 a las 4 en plaza de la virgen",
+            "Nos vemos el cuatro de enero de 1905 para arreglar las cosas",
+            "sin des: 4 enero 1905 para arreglar las cosas",
+            "4 de noviembre de 2019 inicia un frase",
+            "También puede terminarlo: 4 de noviembre de 2019",
+            "O llevar punctuación: 4 de noviembre de 2019!",
+            "O hay más espacios y otros tipos de punctuación: 4  de---noviembre de /2019\!",
+            "No sensitvo al case 4  DE noViemBre de 2019 "
 
         ]
 
         negative_examples = ["Nos vemos los 3 en deciembre algun día a las 4",
-                            "En 2019 agosto los 2020 quedaron",
+                             "En 2019 agosto los 2020 quedaron",
                              "Demasiado punctuación entre los caracteres: 4----de noviembre de 2019",
                              "Error de ortografia: 4 de novimbre de 2019"
                              ]
@@ -74,9 +97,9 @@ class TestDateMatcher(unittest.TestCase):
         for example in negative_examples:
             assert len(self.matcher.match(example)) == 0
 
-        #Checking that the date is matched exactly, without superfluous punctuation and spaces around it
+        # Checking that the date is matched exactly, without superfluous punctuation and spaces around it
         ex = " ¿4 de noviembre de 2018? "
-        match = self.matcher.match(ex)[0].captures()[0] #Potentially stupid code, found very ad hoc
+        match = self.matcher.match(ex)[0].captures()[0]  # Potentially stupid code, found very ad hoc
         assert match == "4 de noviembre de 2018"
 
 
@@ -110,8 +133,8 @@ class TestCIFMatcher(unittest.TestCase):
             assert len(matcher.match(example)) == 0
 
         ex = " ¿B97017461? "
-        assert(len(matcher.match(ex)) == 1)
-        match = matcher.match(ex)[0].captures()[0] #Potentially stupid code, found very ad hoc
+        assert (len(matcher.match(ex)) == 1)
+        match = matcher.match(ex)[0].captures()[0]  # Potentially stupid code, found very ad hoc
         assert match == "B97017461"
 
 
@@ -141,6 +164,7 @@ class TestDNIMatcher(unittest.TestCase):
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
+
 class TestEmailMatcher(unittest.TestCase):
     def test(self):
 
@@ -161,8 +185,14 @@ class TestEmailMatcher(unittest.TestCase):
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
+
 class TestSpanishLastNameMatcher(unittest.TestCase):
+    LASTNAME_DEBUG_FILE_NAME = "debugging_apellidos.csv"
+    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = LASTNAME_DEBUG_FILE_NAME
+    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = LASTNAME_DEBUG_FILE_NAME
+
     def test(self):
+
         examples = [
             "Este es un nombre: Aguilar ",
             " ñ works: Peña",
@@ -184,11 +214,16 @@ class TestSpanishLastNameMatcher(unittest.TestCase):
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
-        #Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
+        # Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
         assert not "DOS SANTOS" in matcher.matcher_regex.pattern
 
 
 class TestSpanishFirstNameMatcher(unittest.TestCase):
+    FIRSTNAME_DEBUG_FILE_NAME = "debugging_first_names.csv"
+
+    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = FIRSTNAME_DEBUG_FILE_NAME
+    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = FIRSTNAME_DEBUG_FILE_NAME
+
     def test(self):
         examples = [
             "Este es un nombre: Jose ",
@@ -200,35 +235,43 @@ class TestSpanishFirstNameMatcher(unittest.TestCase):
         ]
 
         matcher = SpanishFirstNameMatcher()
-
         for example in examples:
             assert len(matcher.match(example)) == 1
 
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
-        #Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
-        assert not "MARIE CARMEN" in matcher.matcher_regex.pattern
+        # Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
+        assert not "MARIA CARMEN" in matcher.matcher_regex.pattern
 
 
 class TestSpanishFullNameMatcher(unittest.TestCase):
+    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
+    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
+    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
+    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
+
     def test(self):
+
         examples = [
             " Jose Aguilar ",
             " Jose Jose Aguilar ",
             " Jose Jose Aguilar Aguilar",
-            " Marie Carmen Morena Blanca",
-            " Yolanda Yolanda Yolanda Aguilar Aguilar", #Matches starting from second Yolanda
-            " Marie Carmen Maria Morena Blanca ",  # Matches starting from Carmen
-            " Manuel Herranz Pérez ", #Accents matched
-            " JOSE AGUILAR ",
+            " Marie Carmen Pérez Peña",
+            " Yolanda Yolanda Yolanda Aguilar Aguilar",  # Matches starting from second Yolanda
+            " Marie Carmen Maria Pérez Peña ",  # Matches starting from Carmen
+            " Jose Herranz Pérez ",  # Accents matched
+            "JOSE AGUILAR",
+            "JOSE AGUILAR presentó algo",
+            "JOSE AGUILAR  ",
+
         ]
         neg_examples = [
             " boehoebhoe biedoebiedoe badabada boehoehoe ",
-            " Jose De La Mano", #No last names consisting of multiple names
-            " jose aguilar ", #lower case names not considered
+            " Jose De La Mano",  # No last names consisting of multiple names
+            " jose aguilar ",  # lower case names not considered
             " Jose aguilar",
-         ]
+        ]
 
         matcher = SpanishFullNameMatcher()
 
@@ -237,7 +280,6 @@ class TestSpanishFullNameMatcher(unittest.TestCase):
 
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
-
 
 
 if __name__ == '__main__':
