@@ -11,7 +11,7 @@
     Current lazy solution:
         Only consider names consisting of one word (this guarantees that there is no overlap between ors)
 
-2) Complex problem_ regexes with optional matches at the end (or beginning) result in incorrect matching
+2) Complex problem: regexes with optional matches at the end (or beginning) result in incorrect matching
     due to spaces because there is no (straightforward) way to know whether the last optional word has
     been matched.
     If it was matched: look-ahead required to check for a space. If not: the last matched word should
@@ -23,3 +23,5 @@
             (or for example "Jose Romero es un hombre" is not matched on either, but
             "Jose Romero  es un hombre" is.)
     this works: first-name optional-first-name optional-second-name second-name
+    However, the general problem remains unfixed: the first and last word of a multiword regex
+    cannot be optional. For now this is solved lazily by explicitly assuring this is not the case.

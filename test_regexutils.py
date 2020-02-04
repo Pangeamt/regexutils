@@ -1,11 +1,9 @@
 import unittest
-from pathlib import Path
 
-import regexutils
+import regexes
 from regex import regex
-from regexutils import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
+from regexes import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
     SpanishLastNameMatcher, SpanishFirstNameMatcher, SpanishFullNameMatcher
-import files
 
 
 class TestRegexBuilder(unittest.TestCase):
@@ -14,7 +12,7 @@ class TestRegexBuilder(unittest.TestCase):
     """
 
     def test_build(self):
-        """Tests code path with 0 and only 1 option given"""
+        """Tests code path with 0 options given"""
         rb = RegexBuilder()
         assert rb.build() == ""
         rb.add_option("and")
@@ -38,18 +36,18 @@ class TestRegexBuilder(unittest.TestCase):
 
 class TestMultiWordRegexBuilder(unittest.TestCase):
     def test(self):
-        rb = regexutils.MultiWordRegexBuilder()
+        rb = regexes.MultiWordRegexBuilder()
         rb.add_regex_word("Hello", optional=True)
         with self.assertRaises(ValueError):
             rb.build()
 
-        rb = regexutils.MultiWordRegexBuilder()
+        rb = regexes.MultiWordRegexBuilder()
         rb.add_regex_word("Hello", optional=False)
         rb.add_regex_word("Again", optional=True)
         with self.assertRaises(ValueError):
             rb.build()
         try:
-            rb = regexutils.MultiWordRegexBuilder()
+            rb = regexes.MultiWordRegexBuilder()
             rb.add_regex_word("Hello", optional=False)
             rb.add_regex_word("Once", optional=True)
             rb.add_regex_word("Again", optional=False)
@@ -79,7 +77,7 @@ class TestDateMatcher(unittest.TestCase):
             "4 de noviembre de 2019 inicia un frase",
             "También puede terminarlo: 4 de noviembre de 2019",
             "O llevar punctuación: 4 de noviembre de 2019!",
-            "O hay más espacios y otros tipos de punctuación: 4  de---noviembre de /2019\!",
+            r"O hay más espacios y otros tipos de punctuación: 4  de---noviembre de /2019\!",
             "No sensitvo al case 4  DE noViemBre de 2019 "
 
         ]
@@ -188,8 +186,8 @@ class TestEmailMatcher(unittest.TestCase):
 
 class TestSpanishLastNameMatcher(unittest.TestCase):
     LASTNAME_DEBUG_FILE_NAME = "debugging_apellidos.csv"
-    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = LASTNAME_DEBUG_FILE_NAME
-    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = LASTNAME_DEBUG_FILE_NAME
+    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = LASTNAME_DEBUG_FILE_NAME
+    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = LASTNAME_DEBUG_FILE_NAME
 
     def test(self):
 
@@ -221,8 +219,8 @@ class TestSpanishLastNameMatcher(unittest.TestCase):
 class TestSpanishFirstNameMatcher(unittest.TestCase):
     FIRSTNAME_DEBUG_FILE_NAME = "debugging_first_names.csv"
 
-    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = FIRSTNAME_DEBUG_FILE_NAME
-    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = FIRSTNAME_DEBUG_FILE_NAME
+    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = FIRSTNAME_DEBUG_FILE_NAME
+    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = FIRSTNAME_DEBUG_FILE_NAME
 
     def test(self):
         examples = [
@@ -246,10 +244,10 @@ class TestSpanishFirstNameMatcher(unittest.TestCase):
 
 
 class TestSpanishFullNameMatcher(unittest.TestCase):
-    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
-    regexutils.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
-    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
-    regexutils.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
+    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
+    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
+    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
+    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
 
     def test(self):
 

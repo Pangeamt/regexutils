@@ -1,8 +1,6 @@
 from regex import regex
 import csv
 import files
-
-
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -162,7 +160,7 @@ class EmailMatcher(RegexMatcher):
 
     def __init__(self):
         # based onhttps://www.regular-expressions.info/email.html
-        email_regex = "[A-Z\d\.\_%\+\-]+@[A-Z\d\.\-]+\.[A-Z]{2,}"
+        email_regex = r"[A-Z\d\.\_%\+\-]+@[A-Z\d\.\-]+\.[A-Z]{2,}"
         regex_builder = RegexBuilder()
         regex_builder.add_option(email_regex)
         tot_regex = regex_builder.build()
