@@ -217,8 +217,9 @@ class SpanishLastNameMatcher(RegexMatcher):
     LASTNAMES_FILE_LOC_1 = 'apellidos_frecuencia_frequency_20_to_100.csv'
     LASTNAMES_FILE_LOC_2 = 'apellidos_frecuencia_frequency_over_100.csv'
 
-    def __init__(self, ):
-        last_names = self.get_last_names()
+    def __init__(self, last_names_file_1=None, last_names_file_2=None):
+        """Do not pass any parameters unless you want to provide alternative files for reading the names"""
+        last_names = self.get_last_names(last_names_file_1, last_names_file_2)
         rb = RegexBuilder()
         rb.add_list_options_as_regex(last_names)
         tot_regex = rb.build()
@@ -232,14 +233,19 @@ class SpanishLastNameMatcher(RegexMatcher):
         super().__init__(matcher_regex)
 
     @classmethod
-    def get_last_names(cls):
+    def get_last_names(cls, last_names_file_1=None, last_names_file_2=None):
+        if last_names_file_1 is None:
+            last_names_file_1 = cls.LASTNAMES_FILE_LOC_1
+        if last_names_file_2 is None:
+            last_names_file_2 = cls.LASTNAMES_FILE_LOC_2
+
         lastnames = set()
-        names_file_1 = pkg_resources.open_text(files, cls.LASTNAMES_FILE_LOC_1)
+        names_file_1 = pkg_resources.open_text(files, last_names_file_1)
         for line in names_file_1:
             stripped_line = line.split(",")
             if stripped_line[0].isnumeric():
                 lastnames.add(stripped_line[1])
-        names_file_2 = pkg_resources.open_text(files, cls.LASTNAMES_FILE_LOC_2)
+        names_file_2 = pkg_resources.open_text(files, last_names_file_2)
         names_file_1.close()
         for line in names_file_2:
             stripped_line = line.split(",")
@@ -255,8 +261,8 @@ class SpanishFirstNameMatcher(RegexMatcher):
     FIRSTNAMES_FILE_LOC_1 = 'nombres_masculinos.csv'
     FIRSTNAMES_FILE_LOC_2 = 'nombres_femininos.csv'
 
-    def __init__(self):
-        firstnames = self.get_first_names()
+    def __init__(self, firstnames_file_1=None, firstnames_file_2=None):
+        firstnames = self.get_first_names(firstnames_file_1, firstnames_file_2)
         rb = RegexBuilder()
         rb.add_list_options_as_regex(firstnames)
         tot_regex = rb.build()
@@ -270,7 +276,12 @@ class SpanishFirstNameMatcher(RegexMatcher):
         super().__init__(matcher_regex)
 
     @classmethod
-    def get_first_names(cls):
+    def get_first_names(cls, firstnames_file_1=None, firstnames_file_2=None):
+        if firstnames_file_1 is None:
+            firstnames_file_1 = cls.FIRSTNAMES_FILE_LOC_1
+        if firstnames_file_2 is None:
+            firstnames_file_2 = cls.FIRSTNAMES_FILE_LOC_2
+
         firstnames = set()
         names_file_1 = pkg_resources.open_text(files, cls.FIRSTNAMES_FILE_LOC_1)
         for line in names_file_1:
@@ -291,9 +302,9 @@ class SpanishFirstNameMatcher(RegexMatcher):
 
 class SpanishFullNameMatcher(RegexMatcher):
 
-    def __init__(self):
-        first_names = SpanishFirstNameMatcher.get_first_names()
-        last_names = SpanishLastNameMatcher.get_last_names()
+    def __init__(self, first_name_file_1=None, first_name_file_2=None, last_name_file_1=None, last_name_file_2=None):
+        first_names = SpanishFirstNameMatcher.get_first_names(first_name_file_1, first_name_file_2)
+        last_names = SpanishLastNameMatcher.get_last_names(last_name_file_1, last_name_file_2)
 
         rb_first_names = RegexBuilder()
         rb_first_names.add_list_options_as_regex(first_names)

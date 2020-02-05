@@ -186,8 +186,6 @@ class TestEmailMatcher(unittest.TestCase):
 
 class TestSpanishLastNameMatcher(unittest.TestCase):
     LASTNAME_DEBUG_FILE_NAME = "debugging_apellidos.csv"
-    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = LASTNAME_DEBUG_FILE_NAME
-    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = LASTNAME_DEBUG_FILE_NAME
 
     def test(self):
 
@@ -204,7 +202,7 @@ class TestSpanishLastNameMatcher(unittest.TestCase):
             " Degroote ",
         ]
 
-        matcher = SpanishLastNameMatcher()
+        matcher = SpanishLastNameMatcher(self.LASTNAME_DEBUG_FILE_NAME, self.LASTNAME_DEBUG_FILE_NAME)
 
         for example in examples:
             assert len(matcher.match(example)) == 1
@@ -216,11 +214,11 @@ class TestSpanishLastNameMatcher(unittest.TestCase):
         assert not "DOS SANTOS" in matcher.matcher_regex.pattern
 
 
+
+
 class TestSpanishFirstNameMatcher(unittest.TestCase):
     FIRSTNAME_DEBUG_FILE_NAME = "debugging_first_names.csv"
 
-    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = FIRSTNAME_DEBUG_FILE_NAME
-    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = FIRSTNAME_DEBUG_FILE_NAME
 
     def test(self):
         examples = [
@@ -232,23 +230,17 @@ class TestSpanishFirstNameMatcher(unittest.TestCase):
             " Gnoeboehoe ",
         ]
 
-        matcher = SpanishFirstNameMatcher()
+        matcher = SpanishFirstNameMatcher(self.FIRSTNAME_DEBUG_FILE_NAME, self.FIRSTNAME_DEBUG_FILE_NAME)
         for example in examples:
             assert len(matcher.match(example)) == 1
 
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
-        # Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
         assert not "MARIA CARMEN" in matcher.matcher_regex.pattern
 
 
 class TestSpanishFullNameMatcher(unittest.TestCase):
-    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_1 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
-    regexes.SpanishFirstNameMatcher.FIRSTNAMES_FILE_LOC_2 = TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME
-    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_1 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
-    regexes.SpanishLastNameMatcher.LASTNAMES_FILE_LOC_2 = TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
-
     def test(self):
 
         examples = [
@@ -271,7 +263,11 @@ class TestSpanishFullNameMatcher(unittest.TestCase):
             " Jose aguilar",
         ]
 
-        matcher = SpanishFullNameMatcher()
+        matcher = SpanishFullNameMatcher(TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME,
+                                         TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME,
+                                         TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME,
+                                         TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
+                                         )
 
         for example in examples:
             assert len(matcher.match(example)) == 1
@@ -279,6 +275,13 @@ class TestSpanishFullNameMatcher(unittest.TestCase):
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
 
+class TestFilesExist(unittest.TestCase):
+    def test(self):
+        f_names = regexes.SpanishFirstNameMatcher.get_first_names()
+        assert f_names is not None
+        l_names = regexes.SpanishLastNameMatcher.get_last_names()
+        assert l_names is not None
+        regexes.DateMatcher()
 
 if __name__ == '__main__':
     unittest.main()

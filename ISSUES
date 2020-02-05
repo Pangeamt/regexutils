@@ -25,3 +25,9 @@
     this works: first-name optional-first-name optional-second-name second-name
     However, the general problem remains unfixed: the first and last word of a multiword regex
     cannot be optional. For now this is solved lazily by explicitly assuring this is not the case.
+
+
+3) Refactoring to be done for cleaning up code: the name matchers in regexes need to read their names
+ from the newly created files Spanish_first_names and Spanish_last_names, and the files they currently
+ use can be removed from the package. (note: potentially these name matchers can be removed entirely
+ as they are very inefficient and have odd behaviour with optionals)
