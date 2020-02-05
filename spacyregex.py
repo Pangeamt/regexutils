@@ -3,35 +3,32 @@ from spacy.tokens import Token
 import unidecode  # GPL license
 from spacy.tokens.doc import Doc
 from spacy.tokens.span import Span
-
-
-def main():
-    file_name = "files/mini_names_file.txt"
-    names_set = set()
-    with open(file_name) as file:
-        for line in file:
-            names_set.add(line.strip())
-    name_matcher = NameListMatcher(names_set)
-    nlp = spacy.load("es_core_news_md")
-    nlp.add_pipe(name_matcher, last=True)  # add last to the pipeline
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import files
 
 
 def add_name_matching_to_nlp_pipeline(nlp):
-    file_firsts = "files/spanish_first_names.txt"
-    file_lasts = "files/spanish_last_names.txt"
+    file_firsts = "spanish_first_names.txt"
+    file_lasts = "spanish_last_names.txt"
 
     first_names_set_all = set()
-    with open(file_firsts) as file:
-        for line in file:
-            first_names_set_all.add(line.strip())
+    file1 = pkg_resources.open_text(files, file_firsts)
+    for line in file1:
+        first_names_set_all.add(line.strip())
+    file1.close()
     # Removing the names which consist of more than one name (eg. Maria Carmen)
     first_names_set = {name for name in first_names_set_all if len(name.split(" ")) == 1}
     first_name_matcher = FirstNameListMatcher(first_names_set)
 
     last_names_set_all = set()
-    with open(file_lasts) as file:
-        for line in file:
-            last_names_set_all.add(line.strip())
+    file2 = pkg_resources.open_text(files, file_lasts)
+    for line in file2:
+        last_names_set_all.add(line.strip())
+    file2.close()
     # Removing the names which consist of more than one name (eg. Maria Carmen)
     last_names_set = {name for name in last_names_set_all if len(name.split(" ")) == 1}
     last_name_matcher = LastNameListMatcher(last_names_set)
