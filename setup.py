@@ -21,6 +21,8 @@ setup(
     install_requires=[
         "regex",
         "importlib_resources",
+        "spacy",
+        "unidecode",
     ],
     package_data={'': ['files/*.txt', 'files/*.csv']},
 )

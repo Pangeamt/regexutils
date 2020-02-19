@@ -12,6 +12,7 @@ import files
 
 
 def add_name_matching_to_nlp_pipeline(nlp):
+    """Adds steps to spacy's nlp pipeline to tag first names, last names and full names"""
     file_firsts = "spanish_first_names.txt"
     file_lasts = "spanish_last_names.txt"
 
@@ -104,7 +105,6 @@ class FullNameMatcher:
     ANOT_INIT = "B-PER"
     ANOT_OTHER = "I-PER"
     ANOT_NONE = "O"
-    ABBREVIATIONS = ["D."]
 
     def __init__(self, first_name_extension_name=FirstNameListMatcher.EXTENSION_NAME,
                  last_name_extension_name=LastNameListMatcher.EXTENSION_NAME):
@@ -179,6 +179,9 @@ class FullNameMatcher:
         return doc
 
     def is_full_name_getter(self, tokens):
+        """Returns true if a list of tokens corresponds to a full name entity
+        Note: partial full names are accepted (e.g. if the full name is Jose Aguilar Ferreira and
+        only tokens Jose and Aguilar are passed, this is accepted as a full name (same with passing onyl Jose"""
         if tokens is None or len(tokens) < 1:
             return False
         if tokens[0]._.get(self.token_extension_name) != self.ANOT_INIT:

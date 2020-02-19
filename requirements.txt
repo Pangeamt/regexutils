@@ -1,2 +1,4 @@
 regex
 importlib_resources
+spacy
+unidecode
