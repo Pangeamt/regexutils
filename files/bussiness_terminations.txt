@@ -1,0 +1,398 @@
+Sh.A.
+Sh.a.
+Sh.p.K.
+Sh.p.k.
+AG
+GmbH
+UG mit beschränkter Haftung
+Kommanditgesellschaft
+KGaA
+S.A.
+S.A.U
+SAS
+SCI
+SCA
+SCS
+SC
+Coop. Ltda.
+LTD
+Pty. Ltd.
+Inc.
+NL
+AAT
+3AA
+ІП
+ЧУП
+ТАА
+N.V.
+PLC
+BVBA
+EBVBA
+CVBA
+CVOA
+Comm. VA
+Comm. V
+VOF
+SPRL
+SCRL
+SCRI
+SNC
+S.P. de R.L.
+S.P. de R.U.
+S.C. de R.L.
+S.C. de R.I.
+S. en C. por A.
+S. en C.S.
+S. em N.C
+d.d.
+d.o.o.
+k.d.
+d.n.o.
+Sociedade em Comandita por Ações
+Sociedade em Comandita Simples
+Sociedade em Nome Coletivo
+Sociedade em conta de participaçã
+Sociedade em comum
+Cooperativa
+Sociedad Anónima
+Empresa individual
+Micro empreendedor individual
+Empresa pública
+Sociedade de economia mista
+Associação em sentido estrito
+Organização não governamental
+Organização da sociedade civil de interesse público
+Organização social
+Serviços sociais autônomos
+Fundação privada
+Fundação pública
+AD
+АД
+OOD
+ООД
+EAD
+ЕАД
+EOOD
+ЕООД
+ADSITz
+АДСИЦ
+KD
+КД
+KDA
+КДА
+SD
+СД
+ET
+LTDA.
+C.P.A
+EIRL
+股份有限公司
+有限公司
+E.U.
+주식회사
+株式會社
+유한회사
+有限會社
+합자회사
+合資會社
+합명회사
+合名會社
+komanditno društvo
+javno trgovačko društvo
+A/S
+ApS
+A.M.B.A.
+K/S
+I/S
+a.s.
+s.r.o
+SE
+SCE
+EEIG
+SPE
+S.L.N.E
+S. Coop
+Corp
+Inc
+LLC
+LC
+Co Ltd
+PLLC
+LP
+LLP
+LLLP
+Professinoal corporations
+PC
+General partnership
+Sole propietorship
+Oyj
+Oy
+Ky
+Ay
+T:mi
+Abp
+Ab
+Kb
+Öppet bolag
+F:ma
+Anl.
+Andelslag
+Ideell förening
+Stiftelse
+SASU
+Sàrl
+SARL
+SàRL
+EURL
+SCOP
+FCP
+SICAF
+SICAV
+A.E
+E.P.E.
+M.E.P.E
+O.E.
+E.E.
+有限公司
+zrt.
+nytr.
+kft.
+kkt.
+bt.
+kv.
+Pvt. Ltd.
+Unlimiter Company
+Public Sector Unit
+Partnership
+Family Owned Business
+Cooperative
+PT Tbk
+PT
+Perusahaan Umum
+Perum
+Perusahaan Jawatan
+Perjan
+Persekutuan Komanditer
+PP
+Maatschap
+Fa
+UD
+Yayasan
+Koèrasi
+شرکت سهامی عام
+شرکت سهامی خاص
+شرکت با مسئولیت محدود
+شرکت مختلط غیر سهامی
+شرکت مختلط سهامی
+شرکت تضامنی
+شرکت نسبی
+شرکت تعاونی تولید و مصرف
+CPT
+TEO
+hf.
+ehf.
+samlagsfélag
+sf.
+samvinnufélag
+einstaklingsfyrirtæki
+B.M.
+BM
+בע"מ
+S.A.p.A
+s.a.s
+s.r.l.
+s.n.c.
+s.s.
+株式会社
+有限会社
+合同会社
+合資会社
+合名会社
+社団法人
+財団法人
+相互会社
+学校法人
+宗教法人
+監査法人
+税理士法人
+弁護士法人
+共同組合
+信用組合
+信用金庫
+地方公共団体
+一部事務組合
+全部事務組合
+特殊法人
+公団
+公庫
+公社
+独立行政法人
+国立大学法人
+公立大学法人
+TOO
+SIA
+А.Д.
+Д.О.О
+Bhd
+Sdn Bhd
+S.A.B.
+S.A.S.
+S.A. de C.V.
+S.A.P.I.
+S.A.P.I.B
+S. de P.R. de R.L.
+S. de R.L.
+S. en N.C.
+S. Coop.
+S.C.
+S.S.S.
+A.C.
+Close Corporation
+Companies
+Sole Trader
+ASA
+AS
+KS
+ANS
+DA
+Enkeltpersonforetak
+NUF
+KF
+IKS
+FKF
+SF
+Etat
+RHF
+HF
+BL
+BA
+Sparebank
+Stiftelse
+B.V.
+C.V.
+V.O.F.
+Coöperatie
+Onderlinge Waarborgmaatschappij
+Stichting
+Vereniging
+SME Pvt
+Sociedad Simple
+Sociedad Limitada.
+Sociedad Limitada
+Sociedad Limitada Unipersonal
+SAU
+S.A.U.
+s.a.u
+S.C
+Y Cia
+Sociedad en Comandita Simple
+S.R.L.
+Sociedad en Comandita por Acciones
+Sociedades Consituidas en el Extranjero
+Sociedad Anónima Abierta
+SAA
+Sociedad Anónima Cerrada
+SAC
+Sociedad Anómi,a
+SA
+Sociedad de Responsabilidad Limitada
+SRL
+Sociedad Cooperativa
+Sociedad en Nombre Colectivo
+Empresa Individual de Responsabilidad Limitada
+Empresa unipersonal
+Empresa Estatal
+Sp.z o.o.
+P.P.
+Spółdzielnia
+sp.k.
+S.K.A.
+sp.p.
+sp.j.
+s.c.
+jednoosobowa działalność gospodarcza
+Lda.
+Unipessoal Lda
+SGPS
+PLC
+Ccc
+Cyf
+Limited
+Cyfyngedig
+Unlimited Company
+Anghyfyngedig
+Company limited by guarantee
+CIC
+Community interest company.
+Cooperative
+Limited partnership
+Limited liability partnership
+a.s.
+akc. spol.
+s.r.o.
+spol. s r.o.
+v.o.s.
+s.c.s.
+s.c.a.
+s.n.c.
+OAO
+ZAO
+ЗАО
+OOO
+GP
+ГП
+GUP
+ГУП
+PK
+ПK
+IP
+ИП
+ANO
+AHO
+A.D.
+Public company
+Publieke Maatskappy
+Private Company
+Privaat Maatskappy
+CC
+BK
+Section 21 Company
+AB
+KB
+HB
+Enskild
+Ek. för.
+บริษัทมหาชนจำกัด
+บริษัท
+บริษัทเอกชนจำกัด
+บริษัท
+ห้างหุ้นส่วนจำกั
+ห้างหุ้นส่วน
+ห้างหุ้นส่วนสามัญนิติบุคคล
+ห้างหุ้นส่วน
+A.Ş.
+Ltd. Şti.
+VAT
+ВАТ
+ZAT
+ЗАТ
+DAT
+ДАТ
+TOV
+TOB
+TDV
+ТДВ
+KT
+PT
+ПT
+FOP
+ФОП
+MChJ
+çC.A.
+S.A.C.A
+S.A.I.C.A
+R.L.
+R.S.
+F.P.
+TNHH
+Cty TNHH

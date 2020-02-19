@@ -13,8 +13,10 @@ class MultiWordRegexBuilder:
     The resulting regex will match a series of words (as many words as there are individual regexes)
     Each word is separated from another word by 1 or potentially more "separators"
         (space, tab... Can be defined by user)
-    A word can be made optional. It a word is optional, the regex matches it both if the word is present or not
+    A word can be made optional. If a word is optional, the regex matches it both if the word is present or not
     """
+    #ToDo Note: there is currently a bug with making the first or last word optional.
+    #ToDo document code better
     def __init__(self, separators=r"([\p{P} \n\t])", max_separators=3):
         """Take care to define the possible separators a valid regex between square brackets
             (making them separate options), as in the standard value"""
@@ -62,9 +64,11 @@ class RegexBuilder:
         Useful for example when creating a regex which matches any of a list of words (e.g. all countries in the world)
     """
 
-    def __init__(self, word_sep_tokens=r"\p{P} \n\t"):
+    def __init__(self, word_sep_tokens=r"([\p{P} \n\t])"):
+        """Take care to define the possible separators a valid regex between square brackets
+            (making them separate options), as in the standard value"""
         self._possibilities = []
-        self.separators = "[" + word_sep_tokens + "]"
+        self.separators = word_sep_tokens
 
     def build(self):
         """Returns the total regex, extending it to ensure it only matches starting from the start of a word
@@ -126,6 +130,7 @@ class RegexMatcher():
         self.matcher_regex = matcher_regex
 
     def match(self, text):
+        """Applies a regex and returns a list of matches"""
         res_iter = self.matcher_regex.finditer(text)
         res = []
         for elem in res_iter:
@@ -339,3 +344,37 @@ class SpanishFullNameMatcher(RegexMatcher):
                 new_matches.append(match)
         return new_matches
 
+class CompanyExtensionMatcher(RegexMatcher):
+    COMPANY_EXTENSIONS = "bussiness_terminations.txt"
+    def __init__(self):
+        file = pkg_resources.open_text(files, self.COMPANY_EXTENSIONS)
+        file_lines = file.readlines()
+        file.close()
+        companies = []
+        for line in file_lines:
+            companies.append(line.strip().replace(".", "\."))
+        builder = RegexBuilder()
+        builder.add_list_options_as_regex(companies)
+        comp_regex = builder.build()
+        matcher_regex = regex.compile(comp_regex)
+        super().__init__(matcher_regex)
+
+class HashTagMatcher(RegexMatcher):
+    """Matches twitter hashtags (#TAG)"""
+    def __init__(self):
+        ht_regex = r"[＃#]{1}(\w+)"
+        regex_builder = RegexBuilder()
+        regex_builder.add_option(ht_regex)
+        tot_regex = regex_builder.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)
+
+class MentionMatcher(RegexMatcher):
+    """Matches twitter mentions (@USERNAME)"""
+    def __init__(self):
+        mention_regex = r"[＠@]{1}([\w_]+)"
+        regex_builder = RegexBuilder()
+        regex_builder.add_option(mention_regex)
+        tot_regex = regex_builder.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)

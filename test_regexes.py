@@ -283,5 +283,35 @@ class TestFilesExist(unittest.TestCase):
         assert l_names is not None
         regexes.DateMatcher()
 
+
+class TestCompanyExtensionsMatcher(unittest.TestCase):
+    def test(self):
+        examples = [
+            "Pangeanic BVBA ",
+            "Pangea S.A. "
+        ]
+        matcher = regexes.CompanyExtensionMatcher()
+        for example in examples:
+            assert len(matcher.match(example)) == 1
+
+
+class TestHashTagMatcher(unittest.TestCase):
+    def test(self):
+        matcher = regexes.HashTagMatcher()
+        text = "Hi #PaNíwrevña_2! And welcome"
+        res = matcher.match(text)
+        assert len(res) == 1
+        assert text[res[0].span()[0]:res[0].span()[1]] == "#PaNíwrevña_2"
+
+
+
+class TestMentionMatcher(unittest.TestCase):
+    def test(self):
+        matcher = regexes.MentionMatcher()
+        text = "Hi @Hañz_í... and welcome"
+        res = matcher.match(text)
+        assert len(res) == 1
+        assert text[res[0].span()[0]:res[0].span()[1]] == "@Hañz_í"
+
 if __name__ == '__main__':
     unittest.main()

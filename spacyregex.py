@@ -77,6 +77,7 @@ class AccentRemover:
 
     @staticmethod
     def remove_accents(unicode_word):
+        """Only works with unicode strings!"""
         # From https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-in-a-python-unicode-string
         return unidecode.unidecode(unicode_word)
 
@@ -122,7 +123,7 @@ class FullNameMatcher:
             Doc.set_extension(self.doc_extension_name, default=[])
 
     def __call__(self, doc):
-        # Could use refactoring for readability and structure, as it's too complex now
+        #ToDo Could use refactoring for readability and structure, as it's too complex now
         full_name_spans = []
         min_span_size = 2
         max_span_size = 2
