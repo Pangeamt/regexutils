@@ -2,18 +2,17 @@ import unittest
 
 import regexes
 from regex import regex
-from regexes import DateMatcher, CIFMatcher, DNIMatcher, RegexBuilder, RegexMatcher, EmailMatcher, \
-    SpanishLastNameMatcher, SpanishFirstNameMatcher, SpanishFullNameMatcher
+from regexes import DateMatcher, CIFMatcher, DNIMatcher, SingleWordRegexBuilder, RegexMatcher, EmailMatcher
 
 
 class TestRegexBuilder(unittest.TestCase):
-    """Most of RegexBuilder is tested by testing some of its implementing classes.
+    """Most of SingleWordRegexBuilder is tested by testing some of its implementing classes.
     Here are tested codepaths which were at the time of writing the tests not covered by the implementing classes
     """
 
     def test_build(self):
         """Tests code path with 0 options given"""
-        rb = RegexBuilder()
+        rb = SingleWordRegexBuilder()
         assert rb.build() == ""
         rb.add_option("and")
         rb.add_option("BLABLABALBABLABLABA")
@@ -68,6 +67,17 @@ class TestDateMatcher(unittest.TestCase):
         numbers = [number.casefold() for number in matcher.written_numbers]
         assert ("diciembre".casefold() in months)
         assert ("veintiséis".casefold() in numbers)
+
+    def test_read_numbers_file(self):
+        numbers = DateMatcher.read_numbers_file()
+        assert numbers is not None
+        assert ("veintiséis" in numbers)
+
+
+    def test_read_months_file(self):
+        months = DateMatcher.read_months_file()
+        assert months is not None
+        assert ("Diciembre" in months)
 
     def test_find_dates(self):
         examples = [
@@ -182,107 +192,6 @@ class TestEmailMatcher(unittest.TestCase):
 
         for example in neg_examples:
             assert len(matcher.match(example)) == 0
-
-
-class TestSpanishLastNameMatcher(unittest.TestCase):
-    LASTNAME_DEBUG_FILE_NAME = "debugging_apellidos.csv"
-
-    def test(self):
-
-        examples = [
-            "Este es un nombre: Aguilar ",
-            " ñ works: Peña",
-            " Name ",
-            " Is ",
-            " Con ",
-            " Accents: Pérez "
-
-        ]
-        neg_examples = [
-            " Degroote ",
-        ]
-
-        matcher = SpanishLastNameMatcher(self.LASTNAME_DEBUG_FILE_NAME, self.LASTNAME_DEBUG_FILE_NAME)
-
-        for example in examples:
-            assert len(matcher.match(example)) == 1
-
-        for example in neg_examples:
-            assert len(matcher.match(example)) == 0
-
-        # Checks if names with spaces like "DOS SANTOS" are absent from the regex (see ISSUES file)
-        assert not "DOS SANTOS" in matcher.matcher_regex.pattern
-
-
-
-
-class TestSpanishFirstNameMatcher(unittest.TestCase):
-    FIRSTNAME_DEBUG_FILE_NAME = "debugging_first_names.csv"
-
-
-    def test(self):
-        examples = [
-            "Este es un nombre: Jose ",
-            " ñ works: Begoña",
-            " Accents: Luís "
-        ]
-        neg_examples = [
-            " Gnoeboehoe ",
-        ]
-
-        matcher = SpanishFirstNameMatcher(self.FIRSTNAME_DEBUG_FILE_NAME, self.FIRSTNAME_DEBUG_FILE_NAME)
-        for example in examples:
-            assert len(matcher.match(example)) == 1
-
-        for example in neg_examples:
-            assert len(matcher.match(example)) == 0
-
-        assert not "MARIA CARMEN" in matcher.matcher_regex.pattern
-
-
-class TestSpanishFullNameMatcher(unittest.TestCase):
-    def test(self):
-
-        examples = [
-            " Jose Aguilar ",
-            " Jose Jose Aguilar ",
-            " Jose Jose Aguilar Aguilar",
-            " Marie Carmen Pérez Peña",
-            " Yolanda Yolanda Yolanda Aguilar Aguilar",  # Matches starting from second Yolanda
-            " Marie Carmen Maria Pérez Peña ",  # Matches starting from Carmen
-            " Jose Herranz Pérez ",  # Accents matched
-            "JOSE AGUILAR",
-            "JOSE AGUILAR presentó algo",
-            "JOSE AGUILAR  ",
-
-        ]
-        neg_examples = [
-            " boehoebhoe biedoebiedoe badabada boehoehoe ",
-            " Jose De La Mano",  # No last names consisting of multiple names
-            " jose aguilar ",  # lower case names not considered
-            " Jose aguilar",
-        ]
-
-        matcher = SpanishFullNameMatcher(TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME,
-                                         TestSpanishFirstNameMatcher.FIRSTNAME_DEBUG_FILE_NAME,
-                                         TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME,
-                                         TestSpanishLastNameMatcher.LASTNAME_DEBUG_FILE_NAME
-                                         )
-
-        for example in examples:
-            assert len(matcher.match(example)) == 1
-
-        for example in neg_examples:
-            assert len(matcher.match(example)) == 0
-
-class TestFilesExist(unittest.TestCase):
-    def test(self):
-        f_names = regexes.SpanishFirstNameMatcher.get_first_names()
-        assert f_names is not None
-        l_names = regexes.SpanishLastNameMatcher.get_last_names()
-        assert l_names is not None
-        regexes.DateMatcher()
-
 
 class TestCompanyExtensionsMatcher(unittest.TestCase):
     def test(self):

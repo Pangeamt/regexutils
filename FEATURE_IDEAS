@@ -1,0 +1,16 @@
+-A general function which creates a matcher based on a user-passed dictionary (to be read from file)
+and the name of the corresponding tag
+    (Possible options: take case into account? fuzzy matching? Take accents into account?)
+
+-A general function which creates a matcher based on a user-passed regex (to be read from file)
+and the name of the corresponding tag
+    (Possible options: passing regex flags)
+
+-Extending the spacy name matcher:
+    -Match full names in reversed order (last names first, then first names)
+    -Match titles before names
+    -Match patterns "Title lastname*"
+    -Match sole first names or last names if a full name is found in the doc which contains it
+     (and link them to original)=>better anonimisation and allows more complex cross-references
+
+      

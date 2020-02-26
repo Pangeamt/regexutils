@@ -3,7 +3,7 @@
 from setuptools import setup
 
 
-with open('README.rst') as f:
+with open('README.txt') as f:
     readme = f.read()
 
 with open('LICENSE') as f:

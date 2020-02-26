@@ -3,13 +3,10 @@
         -Dos
         -Santos
         -Dos Santos
-    Behaviour on input "Dos Santos" if not explicitly considered:
-            Regex ors (|) match greedily: first match wins. So if first match is "Dos", there will be two matches:
-                Dos and Santos. However, if first match is "Dos Santos" there will be only one match ("Dos Santos")
-            Further complication of current code: the order of names in the regex is non-deterministic, as they
-            are read from a set. (so the output of the regex is non-deterministic)
     Current lazy solution:
         Only consider names consisting of one word (this guarantees that there is no overlap between ors)
+    Proper solution:
+        Extend spacyregex's name matcher to include the option of multi-token names
 
 2) Complex problem: regexes with optional matches at the end (or beginning) result in incorrect matching
     due to spaces because there is no (straightforward) way to know whether the last optional word has
@@ -17,17 +14,14 @@
     If it was matched: look-ahead required to check for a space. If not: the last matched word should
     do the look-ahead. [If spaces are defined before the word instead of after the problem turns around,
     and the issue is at the beginning of the word]
-    Example: matching Spanish names consisting of 1 or 2 first names and 1 or 2 last names
-    this does not work: first-name optional-first-name second-name optional-second-name
+    Example (outdated, since name matching is no longer done with regexes, but it serves to illustrate the problem):
+    matching Spanish names consisting of 1 or 2 first names and 1 or 2 last names does not work:
+        first-name optional-first-name second-name optional-second-name
         => does not match on "Jose Romero" or "Jose Romero ", but does match on "Jose Romero  "
             (or for example "Jose Romero es un hombre" is not matched on either, but
             "Jose Romero  es un hombre" is.)
+        => The problem is the spaces, the way it is currently implemented, the word is optional, but the space separating it is not
     this works: first-name optional-first-name optional-second-name second-name
     However, the general problem remains unfixed: the first and last word of a multiword regex
     cannot be optional. For now this is solved lazily by explicitly assuring this is not the case.
 
-
-3) Refactoring to be done for cleaning up code: the name matchers in regexes need to read their names
- from the newly created files Spanish_first_names and Spanish_last_names, and the files they currently
- use can be removed from the package. (note: potentially these name matchers can be removed entirely
- as they are very inefficient and have odd behaviour with optionals)

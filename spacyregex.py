@@ -13,36 +13,43 @@ import files
 
 def add_name_matching_to_nlp_pipeline(nlp):
     """Adds steps to spacy's nlp pipeline to tag first names, last names and full names"""
-    file_firsts = "spanish_first_names.txt"
     file_lasts = "spanish_last_names.txt"
+    file_firsts = "spanish_first_names.txt"
 
-    first_names_set_all = set()
-    file1 = pkg_resources.open_text(files, file_firsts)
-    for line in file1:
-        first_names_set_all.add(line.strip())
-    file1.close()
+
+
+    first_names_set_all = read_file_into_set(file_firsts)
     # Removing the names which consist of more than one name (eg. Maria Carmen)
     first_names_set = {name for name in first_names_set_all if len(name.split(" ")) == 1}
     first_name_matcher = FirstNameListMatcher(first_names_set)
 
-    last_names_set_all = set()
-    file2 = pkg_resources.open_text(files, file_lasts)
-    for line in file2:
-        last_names_set_all.add(line.strip())
-    file2.close()
-    # Removing the names which consist of more than one name (eg. Maria Carmen)
+    last_names_set_all = read_file_into_set(file_lasts)
+    # Removing the names which consist of more than one name
     last_names_set = {name for name in last_names_set_all if len(name.split(" ")) == 1}
     last_name_matcher = LastNameListMatcher(last_names_set)
+
     full_name_matcher = FullNameMatcher()
 
     # Potential optimisation: remove accents once, then use this info in the NameListMatcher
     # To do so: change code in NameListMatcher to call the sin_accent custom extension and uncomment next 2 lines
-
     # accent_remover = AccentRemover()
     # nlp.add_pipe(accent_remover, last=True)
+
     nlp.add_pipe(first_name_matcher, last=True)
     nlp.add_pipe(last_name_matcher, last=True)
     nlp.add_pipe(full_name_matcher, last=True)
+
+
+def read_file_into_set(file_name):
+    """Reads a file with one item per line into a set"""
+    res_set = set()
+    file1 = pkg_resources.open_text(files, file_name)
+    for line in file1:
+        res_set.add(line.strip())
+    file1.close()
+    return res_set
+
+
 
 class NameListMatcher:
 
@@ -84,6 +91,7 @@ class AccentRemover:
 
 
 class FirstNameListMatcher(NameListMatcher):
+    """Matches first names, passed through an iterable (e.g. list)"""
     EXTENSION_NAME = "is_first_name"
 
     def __init__(self, in_names):
@@ -91,6 +99,7 @@ class FirstNameListMatcher(NameListMatcher):
 
 
 class LastNameListMatcher(NameListMatcher):
+    """Matches last names, passed through an iterable (e.g. list)"""
     EXTENSION_NAME = "is_last_name"
 
     def __init__(self, in_names):
@@ -98,6 +107,8 @@ class LastNameListMatcher(NameListMatcher):
 
 
 class FullNameMatcher:
+    """Matches full names, based on a first and last name matcher
+    """
     TOKEN_EXTENSION_NAME = "full_name"
     SPAN_EXTENSION_NAME = "is_full_name"
     DOC_EXTENSION_NAME = "full_names"
