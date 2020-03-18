@@ -1,7 +1,8 @@
 # Functionality for constructing regular expressions
 
 This package provides utility functions for constructing and matching Regular expressions as well as a number
-of specific regexes, focussed mostly on information extraction from Spanish plain text.
+of specific regexes, focussed mostly on information extraction from Spanish plain text. 
+This project is still in an alpha stage.
 
 ## The following regexes are currently implemented:
 - CIF (Spanish company id nr)
@@ -28,5 +29,5 @@ The SingleWordRegexBuilder can generate regexes which can be used in a MultiWord
 using the build_as_part method.
 
 
-## Read the ISSUES file to get an idea of open issues with this project
-## Read the FEATURE_IDEAS file for some features which would be nice to add to the package (feel free to extend)
+#### Please read the ISSUES file to get an idea of open issues with this project
+#### Please read the FEATURE_IDEAS file for some features which would be nice to add to the package (feel free to extend)
