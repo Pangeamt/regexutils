@@ -3,7 +3,7 @@
 This package provides utility functions for constructing and matching Regular expressions as well as a number
 of specific regexes, focussed mostly on information extraction from Spanish plain text.
 
-# # The following regexes are currently implemented:
+## The following regexes are currently implemented:
 - CIF (Spanish company id nr)
 - DNI (Spanish people id nr)
 - email
@@ -14,7 +14,7 @@ of specific regexes, focussed mostly on information extraction from Spanish plai
     => Uses a different technique, interwoven with spacy 
 
 
-# # Implementation details
+## Implementation details
 
 The way the specific regexes work (their functional scope) can be seen by looking at the unit tests (test_regexutils.py)
 
@@ -28,5 +28,5 @@ The SingleWordRegexBuilder can generate regexes which can be used in a MultiWord
 using the build_as_part method.
 
 
-# # Read the ISSUES file to get an idea of open issues with this project
-# # Read the FEATURE_IDEAS file for some features which would be nice to add to the package (feel free to extend)
+## Read the ISSUES file to get an idea of open issues with this project
+## Read the FEATURE_IDEAS file for some features which would be nice to add to the package (feel free to extend)
