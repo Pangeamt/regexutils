@@ -16,10 +16,11 @@ class MultiWordRegexBuilder:
     A word can be made optional. If a word is optional, the regex matches it both if the word is present or not
     """
     #ToDo Note: there is currently a bug with making the first or last word optional.
-    def __init__(self, separators=r"([\p{P} \n\t])", max_separators=3):
+    def __init__(self, separators=r"([\p{P}\s])", max_separators=3):
         """Take care to define the possible separators as a valid regex between square brackets
             (making them separate options), as in the standard value
-            max_separators defines the maximal amount of separators allowed between separate words"""
+            max_separators defines the maximal amount of separators allowed between separate words matched by the
+            final multiword regex"""
         self._regex_words = []
         self._optionals = []
         self.separators = separators
@@ -33,9 +34,11 @@ class MultiWordRegexBuilder:
         if len(self._regex_words) == 0:
             return ""
         if self._optionals[0] == True:
-            raise ValueError("The first argument of the regex cannot be optional")
+            raise ValueError("The first argument of the regex cannot be optional (this is a temprary fix "
+                             "to avoid a bug")
         if self._optionals[-1] == True:
-            raise ValueError("The last argument of the regex cannot be optional")
+            raise ValueError("The last argument of the regex cannot be optional (this is a temprary fix "
+                             "to avoid a bug")
 
         # look behind: start of string or separator
         regex_start = "(?<=^|" + self.separators + ")("
@@ -65,7 +68,7 @@ class SingleWordRegexBuilder:
         Useful for example when creating a regex which matches any of a list of words (e.g. all countries in the world)
     """
 
-    def __init__(self, word_sep_tokens=r"([\p{P} \n\t])"):
+    def __init__(self, word_sep_tokens=r"([\p{P}\s])"):
         """Take care to define the possible separators a valid regex between square brackets
             (making them separate options), as in the standard value"""
         self._possibilities = []
@@ -256,6 +259,40 @@ class HashTagMatcher(RegexMatcher):
         super().__init__(matcher_regex)
 
 
+class SpanishDemonstrativePronounsMatcher(RegexMatcher):
+    # Source: https://www.spanishdict.com/guia/los-pronombres-demostrativos-en-ingles
+    #   (verified by Yaiza for correctness)
+    WORDS_TO_MATCH_LOWERCASED = [
+        "sólo",
+
+        "ésto",
+        "ésta",
+        "éstos",
+        "éstas",
+
+        "éste",
+
+        "aquél",
+        "aquéllo",
+        "aquélla",
+        "aquéllos",
+        "aquéllas",
+
+        "ése",
+        "éso",
+        "ésa",
+        "ésas",
+        "ésos",
+    ]
+
+    def __init__(self):
+        regex_builder = SingleWordRegexBuilder(word_sep_tokens=r"([\p{P}\s])") #All punctuation and white space chars
+        regex_builder.add_list_options_as_regex(self.WORDS_TO_MATCH_LOWERCASED)
+        tot_regex = regex_builder.build()
+        matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
+        super().__init__(matcher_regex)
+
+
 class MentionMatcher(RegexMatcher):
     """Matches twitter mentions (@USERNAME)"""
     def __init__(self):
@@ -265,3 +302,5 @@ class MentionMatcher(RegexMatcher):
         tot_regex = regex_builder.build()
         matcher_regex = regex.compile(tot_regex, flags=regex.IGNORECASE)
         super().__init__(matcher_regex)
+
+

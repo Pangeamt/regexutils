@@ -1,8 +1,8 @@
 import unittest
 
-import regexes
+from regexutils import regexes
 from regex import regex
-from regexes import DateMatcher, CIFMatcher, DNIMatcher, SingleWordRegexBuilder, RegexMatcher, EmailMatcher
+from regexutils.regexes import DateMatcher, CIFMatcher, DNIMatcher, SingleWordRegexBuilder, RegexMatcher, EmailMatcher
 
 
 class TestRegexBuilder(unittest.TestCase):
@@ -221,6 +221,12 @@ class TestMentionMatcher(unittest.TestCase):
         res = matcher.match(text)
         assert len(res) == 1
         assert text[res[0].span()[0]:res[0].span()[1]] == "@Hañz_í"
+
+        text = "Hi h.degroote@pangeanic.com"
+        res = matcher.match(text)
+        assert len(res) == 0
+
+
 
 if __name__ == '__main__':
     unittest.main()

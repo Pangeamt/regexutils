@@ -2,12 +2,12 @@ import unittest
 
 import spacy
 
-import spacyregex
-from spacyregex import NameListMatcher
+from regexutils import spacyrules
+from regexutils.spacyrules import NameListMatcher
 
 
 class TestNameListMatcher(unittest.TestCase):
-    TEST_NAMES_FILE = "files/mini_names_file.txt"
+    TEST_NAMES_FILE = "../files/mini_names_file.txt"
     SPACY_MODEL_NAME = "es_core_news_sm"
 
     def test(self):
@@ -42,9 +42,9 @@ class TestNameListMatcher(unittest.TestCase):
 class TestFullNameMatcher(unittest.TestCase):
 
     def test(self):
-        st_tag = spacyregex.FullNameMatcher.ANOT_INIT
-        mid_tag = spacyregex.FullNameMatcher.ANOT_OTHER
-        none_tag = spacyregex.FullNameMatcher.ANOT_NONE
+        st_tag = spacyrules.FullNameMatcher.ANOT_INIT
+        mid_tag = spacyrules.FullNameMatcher.ANOT_OTHER
+        none_tag = spacyrules.FullNameMatcher.ANOT_NONE
 
         examples = {
             "Jose Luís Ferreira no es Jose Luís ní Luís Ferreira":
@@ -70,7 +70,7 @@ class TestFullNameMatcher(unittest.TestCase):
         }
 
         nlp = spacy.load(TestNameListMatcher.SPACY_MODEL_NAME)
-        spacyregex.add_name_matching_to_nlp_pipeline(nlp)
+        spacyrules.add_name_matching_to_nlp_pipeline(nlp)
 
 
         for example, tags in examples.items():
@@ -80,7 +80,7 @@ class TestFullNameMatcher(unittest.TestCase):
                 # print(doc[j])
                 # print(doc[j]._.get(spacyregex.FullNameMatcher.TOKEN_EXTENSION_NAME))
                 # print(tags[j])
-                assert(doc[j]._.get(spacyregex.FullNameMatcher.TOKEN_EXTENSION_NAME) == tags[j])
+                assert(doc[j]._.get(spacyrules.FullNameMatcher.TOKEN_EXTENSION_NAME) == tags[j])
 
 
 
@@ -93,7 +93,7 @@ class TestSeparateMethods(unittest.TestCase):
 
     def test_add_name_matching_to_nlp_pipeline(self):
         nlp = spacy.load(TestNameListMatcher.SPACY_MODEL_NAME)
-        spacyregex.add_name_matching_to_nlp_pipeline(nlp)
+        spacyrules.add_name_matching_to_nlp_pipeline(nlp)
         text = "Jose Aguilar y Begoña Ferreira"
         doc = nlp(text)
         matches_first = [True, False, False, True, False]
@@ -111,7 +111,7 @@ class TestAccentRemover(unittest.TestCase):
     def test(self):
         nlp = spacy.load(TestNameListMatcher.SPACY_MODEL_NAME)
         extension_name = "sin_accents"
-        accent_remover = spacyregex.AccentRemover(extension_name=extension_name)
+        accent_remover = spacyrules.AccentRemover(extension_name=extension_name)
         nlp.add_pipe(accent_remover)
         text = "Luís Begoña músen mosó"
         unaccented_words = ["Luis", "Begona", "musen", "moso"]

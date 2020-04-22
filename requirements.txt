@@ -1,4 +1,4 @@
-regex
-importlib_resources
-spacy
-unidecode
+importlib-resources==1.0.2
+regex==2019.12.9
+spacy==2.2.3
+Unidecode==1.1.1

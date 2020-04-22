@@ -192,7 +192,7 @@ class FullNameMatcher:
     def is_full_name_getter(self, tokens):
         """Returns true if a list of tokens corresponds to a full name entity
         Note: partial full names are accepted (e.g. if the full name is Jose Aguilar Ferreira and
-        only tokens Jose and Aguilar are passed, this is accepted as a full name (same with passing onyl Jose"""
+        only tokens Jose and Aguilar are passed, this is accepted as a full name (same with passing only Jose"""
         if tokens is None or len(tokens) < 1:
             return False
         if tokens[0]._.get(self.token_extension_name) != self.ANOT_INIT:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 with open('README.txt') as f:
@@ -11,13 +11,13 @@ with open('LICENSE') as f:
 
 setup(
     name='regexutils',
-    version='0.1.0',
-    description='utilities for applying regexes',
+    version='0.1.1',
+    description='Utilities for applying regexes',
     long_description=readme,
-    author='Pangeanic - Hans Degroote',
+    author='Pangeamt - Hans Degroote',
     author_email='h.degroote@pangeanic.com',
     license=license,
-    packages=['', 'files'],
+    packages=find_packages(),
     install_requires=[
         "regex",
         "importlib_resources",
